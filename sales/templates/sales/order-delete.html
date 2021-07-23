@@ -4,13 +4,13 @@
 {% block body %}
 
 <div class="panel-form" style="background-color: #FFC0CB">
-    <form method="POST" action="{% url 'sales:order-delete' order.id %}">
+    <form method="POST" action="{% url 'sales:order-delete' customer.id order.id %}">
         {% csrf_token %}
         <fieldset class="form-group">
             <legend class="text-center mb-3">Are you sure you want to delete {{ order }}?</legend>
         </fieldset>
         <div class="form-group text-center">
-            <a href="{% url 'sales:detail' order.customer.id %}" class="btn btn-outline-secondary">Cancel</a>
+            <a href="{% url 'sales:detail' customer.id %}" class="btn btn-outline-secondary">Cancel</a>
             <button type="submit" class="btn btn-outline-danger">Delete</button>
         </div>
     </form>

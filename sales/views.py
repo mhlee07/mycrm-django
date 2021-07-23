@@ -447,7 +447,7 @@ def order_delete(request, pk, order_id):
             messages.warning(request, 'Order:  ' + str(product) + ' - ' + str(quantity) + ' has been deleted.')
             return HttpResponseRedirect(reverse('sales:detail', kwargs={'pk': customer.id}))
 
-        context = {'order': order}
+        context = {'order': order, 'customer': customer}
         return render(request, 'sales/order-delete.html', context)
     else:
         messages.info(request, 'You are not authorized to view this page...')
