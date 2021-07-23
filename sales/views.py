@@ -303,7 +303,7 @@ def customer_delete(request, pk):
 # View products
 @login_required(login_url='sales:login')
 def product_view(request):
-    product_list = Product.objects.all()
+    product_list = Product.objects.all().order_by('-id')
     product_filter = ProductFilter(request.GET, queryset=product_list)
     product_list = product_filter.qs
 
@@ -316,7 +316,7 @@ def product_view(request):
         product_list = p.page(1)
 
     context = {
-        'product_list': product_list.order_by('-id'),
+        'product_list': product_list,
         'product_filter': product_filter
     }
     return render(request, 'sales/product.html', context)
