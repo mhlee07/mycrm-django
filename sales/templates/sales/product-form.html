@@ -1,0 +1,20 @@
+{% extends 'sales/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+
+<div class="panel-form" style="background-color: #ADD8E6">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="text-center mb-3">{{ title }}</legend>
+                {{ form | crispy }}
+        </fieldset>
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-outline-success">Submit</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

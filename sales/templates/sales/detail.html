@@ -1,0 +1,167 @@
+{% extends 'sales/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Customer{% endblock %}
+
+{% block body %}
+
+<h3 class="text-center">Customer - {{ customer.name }}</h3>
+<br />
+
+<div class="row">
+    <div class="col-md d-flex">
+        <div class="card card-body">
+            <h5 class="text-center fw-bold">Customer Information</h5>
+            <hr/>
+            <div style="margin-bottom: 15px;">
+                <a href="{% url 'sales:customer-update' customer.id %}" class="btn btn-outline-primary">
+                    <span class="fas fa-edit"></span>&nbsp;
+                    Edit
+                </a>
+                <a href="{% url 'sales:customer-delete' customer.id %}" class="btn btn-outline-danger">
+                    <span class="fas fa-trash"></span>&nbsp;
+                    Delete
+                </a>
+            </div>
+            <p>Joined Since: {{ customer.join_date | date:"d F Y" }}</p>
+            <p>Phone: {{ customer.phone }}</p>
+            <p>Email: {{ customer.email }}</p>
+            <p>Address: {{ customer.address }}</p>
+        </div>
+    </div>
+    <div class="col-md d-flex">
+        <div class="card card-body">
+            <h5 class="text-center fw-bold">Summary</h5>
+            <hr />
+            <table class="table table-sm">
+                <tr>
+                    <th style="width: 50%">Total Order Value</th>
+                    <td style="font-size: 1.5em;">{{ total_price_sum }}</td>
+                </tr>
+                <tr>
+                    <th style="width: 50%">Total Number of Orders</th>
+                    <td style="font-size: 1.5em;">{{ num_of_order }}</td>
+                </tr>
+                <tr>
+                    <th style="width: 50%">Closed Orders</th>
+                    <td style="font-size: 1.5em;">{{ closed_order }}</td>
+                </tr>
+                <tr>
+                    <th style="width: 50%">Orders In Progress</th>
+                    <td style="font-size: 1.5em; color: red;">{{ order_in_progress }}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="col-md d-flex">
+        <div class="card card-body">
+            <h5 class="text-center fw-bold">Sales Representative</h5>
+            <hr/>
+            <p>Joined Company Since: {{ customer.user_profile.start_date | date:"d F Y" }}</p>
+            <p>Name:
+                {{ customer.user_profile.first_name }} {{ customer.user_profile.last_name }}
+            </p>
+            <p>Phone: {{ customer.user_profile.phone }}</p>
+            <p>Email: {{ customer.user_profile.email }}</p>
+            <p>Workplace: {{ customer.user_profile.address }}</p>
+        </div>
+    </div>
+</div>
+<br />
+
+<div class="row">
+    <div class="col-md-8 d-flex">
+        <div class="card card-body">
+            <h5 class="text-center fw-bold">Orders</h5>
+            <hr />
+            <div style="margin-bottom: 10px;">
+                <a href="{% url 'sales:order-add' customer.id %}" class="btn btn-success">
+                    <span class="fas fa-plus"></span>&nbsp;
+                    Add New
+                </a>
+            </div>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 20%"></th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in order_list %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'sales:order-update' order.id %}" class="btn btn-outline-primary">
+                                <span class="fas fa-edit"></span>&nbsp;
+                                Edit
+                            </a>
+                            <a href="{% url 'sales:order-delete' order.id %}" class="btn btn-outline-danger">
+                                <span class="fas fa-trash"></span>&nbsp;
+                                Delete
+                            </a>
+                        </td>
+                        <td>{{ order.order_date }}</td>
+                        <td>{{ order.product }}</td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ order.total_price | floatformat:2 }}</td>
+                        <td>{{ order.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                  {% if order_list.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ order_list.previous_page_number }}">
+                            <span class="fas fa-angle-double-left"></span>
+                        </a>
+                    </li>
+                  {% endif %}
+
+                    {% for i in order_list.paginator.page_range %}
+                        {% if order_list.number == i %}
+                            <li class="page-item active">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                  {% if order_list.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ order_list.next_page_number }}">
+                            <span class="fas fa-angle-double-right"></span>
+                        </a>
+                    </li>
+                  {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="col-md-4 d-flex">
+        <div class="card card-body">
+            <h5 class="text-center fw-bold">Filter</h5>
+            <hr />
+            <div>
+                <form method="GET">
+                    {{ order_filter.form | crispy }}
+                    <button type="submit" class="btn btn-secondary">
+                        <span class="fas fa-search"></span>&nbsp;
+                        Search
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

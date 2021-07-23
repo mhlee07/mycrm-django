@@ -1,0 +1,360 @@
+{% extends 'sales/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block body %}
+
+<script>
+const dataURL = '{% url 'sales:data' %}'
+
+function getRandomColor() {
+    let letters = '0123456789ABCDEF'
+    let color = '#'
+
+    for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)]
+    }
+    return color
+}
+</script>
+
+<div class="row">
+    <div class="col-md d-flex">
+        <div class="card card-body">
+            <div style="margin: 0 auto;">
+                <canvas id="myChart_1" width="450" height="450"></canvas>
+            </div>
+            <script>
+                let state_1 = {
+                        'labels' : [],
+                        'values' : [],
+                        'colors' : [],
+                    }
+
+                    $.ajax({
+                        method: 'GET',
+                        url: dataURL,
+                        success: function(response){
+                            data_1 = response['data_1']
+                            for (let i in data_1){
+                                state_1.labels.push(data_1[i]['date']),
+                                state_1.values.push(data_1[i]['daily_sales']),
+                                state_1.colors.push(getRandomColor())
+                            }
+                            buildChart_1()
+                        }
+                    })
+
+                    function buildChart_1(){
+                        let ctx_1 = document.getElementById('myChart_1').getContext('2d');
+                        Chart.defaults.font.size = 18;
+
+                        let myChart_1 = new Chart(ctx_1, {
+                            type: 'line',
+                            data: {
+                                labels: state_1.labels,
+                                datasets: [{
+                                    label: 'Sales Value($)',
+                                    data: state_1.values,
+                                    backgroundColor:[
+                                        'rgba(0, 180, 255, 0.2)',
+                                    ],
+                                    fill: true,
+                                    pointBackgroundColor: state_1.colors,
+                                    pointRadius: 6,
+                                    pointHoverRadius: 11,
+                                    hoverBorderWidth: 3,
+                                    hoverBorderColor: '#777',
+                                }]
+                            },
+                            options: {
+                                plugins: {
+                                    title: {
+                                        display: true,
+                                        text: 'Daily Total Amount of Sales'
+                                    },
+                                    legend: {
+                                        display: true,
+                                    },
+                                }
+                            }
+                        })
+                    }
+            </script>
+
+        </div>
+    </div>
+    <div class="col-md d-flex">
+        <div class="card card-body">
+            <div style="margin: 0 auto;">
+                <canvas id="myChart_2" width="450" height="450"></canvas>
+            </div>
+            <script>
+                let state_2 = {
+                    'labels' : [],
+                    'values' : [],
+                    'colors' : [],
+                }
+
+                $.ajax({
+                    method: 'GET',
+                    url: dataURL,
+                    success: function(response){
+                        data_2 = response['data_2']
+                        for (let i in data_2){
+                            state_2.labels.push(data_2[i]['customer_name']),
+                            state_2.values.push(data_2[i]['sales_sum']),
+                            state_2.colors.push(getRandomColor())
+                        }
+                        buildChart_2()
+                    }
+                })
+
+                function buildChart_2(){
+                    let ctx_2 = document.getElementById('myChart_2').getContext('2d');
+                    Chart.defaults.font.size = 18;
+
+                    let myChart_2 = new Chart(ctx_2, {
+                        type: 'pie',
+                        data: {
+                            labels: state_2.labels,
+                            datasets: [{
+                                label: '',
+                                data: state_2.values,
+                                backgroundColor: state_2.colors,
+                                hoverBorderWidth: 3,
+                                hoverBorderColor: '#777',
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Customers vs. Total Order Value'
+                                },
+                                legend: {
+                                    position: 'bottom',
+                                    color: '#000000',
+                                    labels: {
+                                      usePointStyle: true,
+                                    }
+                                },
+                            }
+                        }
+                    })
+                }
+            </script>
+        </div>
+    </div>
+    <div class="col-md d-flex">
+        <div class="card card-body">
+            <div style="margin: 0 auto;">
+                <canvas id="myChart_3" width="450" height="450"></canvas>
+            </div>
+            <script>
+                let state_3 = {
+                    'labels' : [],
+                    'values' : [],
+                    'colors' : [],
+                }
+
+                $.ajax({
+                    method: 'GET',
+                    url: dataURL,
+                    success: function(response){
+                        data_3 = response['data_3']
+                        for (let i in data_3){
+                            state_3.labels.push(data_3[i]['product_name']),
+                            state_3.values.push(data_3[i]['quantity_sum']),
+                            state_3.colors.push(getRandomColor())
+                        }
+                        buildChart_3()
+                    }
+                })
+
+                function buildChart_3(){
+                    let ctx_3 = document.getElementById('myChart_3').getContext('2d');
+                    Chart.defaults.font.size = 18;
+
+                    let myChart_3 = new Chart(ctx_3, {
+                        type: 'bar',
+                        data: {
+                            labels: state_3.labels,
+                            datasets: [{
+                                label: '',
+                                data: state_3.values,
+                                backgroundColor: state_3.colors,
+                                borderWidth: 1,
+                                hoverBorderWidth: 3,
+                                hoverBorderColor: '#777',
+                            }]
+                        },
+                        options: {
+                            plugins: {
+                                title: {
+                                    display: true,
+                                    text: 'Products vs. Total Quantity Purchased'
+                                },
+                                legend: {
+                                    display: false,
+                                    },
+                            }
+                        }
+                    })
+                }
+            </script>
+
+        </div>
+    </div>
+</div>
+<br/>
+
+<div class="row">
+    <div class="col-md-3 d-flex">
+        <div class="card card-body">
+            <h5 class="text-center fw-bold">All Customers</h5>
+            <hr/>
+            <form role="search" method="GET" action=".">
+                <div class="input-group">
+                    <input class="form-control" type="search" name="q"/>
+                    <button type="submit" class="input-group-text btn btn-secondary">
+                        <span class="fas fa-search"></span>&nbsp;
+                        Search
+                    </button>
+                </div>
+            </form>
+            <div style="margin: 5px 0 10px 0;">
+                <a href="{% url 'sales:customer-add' %}" class="btn btn-success">
+                    <span class="fas fa-plus"></span>&nbsp;
+                    Add New
+                </a>
+            </div>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 50%;"></th>
+                        <th scope="col">Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for customer in customer_list %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'sales:detail' customer.id %}" class="btn btn-secondary">
+                                <span class="far fa-eye"></span>&nbsp;
+                                View
+                            </a>
+                        </td>
+                        <td>{{ customer.name }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                  {% if customer_list.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ customer_list.previous_page_number }}">
+                            <span class="fas fa-angle-double-left"></span>
+                        </a>
+                    </li>
+                  {% endif %}
+
+                    {% for i in customer_list.paginator.page_range %}
+                        {% if customer_list.number == i %}
+                            <li class="page-item active">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                  {% if customer_list.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ customer_list.next_page_number }}">
+                            <span class="fas fa-angle-double-right"></span>
+                        </a>
+                    </li>
+                  {% endif %}
+                </ul>
+            </nav>
+
+        </div>
+    </div>
+    <div class="col-md-9 d-flex">
+        <div class="card card-body">
+            <h5 class="text-center fw-bold">All Orders</h5>
+            <hr/>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 15%;"></th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Total Price</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in order_list %}
+                    <tr>
+                        <td scope="row">
+                            <a href="{% url 'sales:detail' order.customer.id %}" class="btn btn-secondary">
+                                <span class="far fa-eye"></span>&nbsp;
+                                View
+                            </a>
+                        </td>
+                        <td>{{ order.order_date }}</td>
+                        <td>{{ order.customer.name }}</td>
+                        <td>{{ order.product.name }}</td>
+                        <td>{{ order.quantity }}</td>
+                        <td>{{ order.total_price }}</td>
+                        <td>{{ order.status }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Pagination -->
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                  {% if order_list.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ order_list.previous_page_number }}">
+                            <span class="fas fa-angle-double-left"></span>
+                        </a>
+                    </li>
+                  {% endif %}
+
+                    {% for i in order_list.paginator.page_range %}
+                        {% if order_list.number == i %}
+                            <li class="page-item active">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+
+                  {% if order_list.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ order_list.next_page_number }}">
+                            <span class="fas fa-angle-double-right"></span>
+                        </a>
+                    </li>
+                  {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

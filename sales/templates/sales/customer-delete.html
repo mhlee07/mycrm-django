@@ -1,0 +1,20 @@
+{% extends 'sales/base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Delete Customer{% endblock %}
+
+{% block body %}
+
+<div class="panel-form" style="background-color: #FFC0CB">
+    <form method="POST" action="{% url 'sales:customer-delete' customer.id %}">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="text-center mb-3">Are you sure you want to delete {{ customer }}?</legend>
+        </fieldset>
+        <div class="form-group text-center">
+            <a href="{% url 'sales:index' %}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-outline-danger">Delete</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'sales/base.html' %}
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+
+<div class="panel-form" style="background-color: white;">
+    <h5 class="text-center fw-bold">My Profile</h5>
+    <hr/>
+    <p>Joined Company Since: {{ profile.start_date | date:"d F Y" }}</p>
+    <p>First Name: {{ profile.first_name }}</p>
+    <p>Last Name: {{ profile.last_name }}</p>
+    <p>Phone: {{ profile.phone }}</p>
+    <p>Email: {{ profile.email }}</p>
+    <p>Workplace: {{ profile.address }}</p>
+</div>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'sales/base.html' %}
+{% block title %}Register{% endblock %}
+
+{% block body %}
+
+<div class="panel-user">
+    <form method="POST">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="text-center mb-3">Register</legend>
+                <div class="input-group mb-2">
+                  <span class="input-group-text" style="background-color: #00BFFF;">
+                      <span class="fas fa-user-circle"></span>
+                  </span>
+                  {{ form.username }}
+                </div>
+                <div class="input-group mb-2">
+                  <span class="input-group-text" style="background-color: #00BFFF;">
+                      <span class="fas fa-key"></span>
+                  </span>
+                  {{ form.password1 }}
+                </div>
+                <div class="input-group mb-3">
+                  <span class="input-group-text" style="background-color: #00BFFF;">
+                      <span class="fas fa-key"></span>
+                  </span>
+                  {{ form.password2 }}
+                </div>
+        </fieldset>
+        <div class="form-group text-center">
+            <button type="submit" class="btn btn-info">Register</button>
+        </div>
+    </form>
+    <br/>
+
+    <div class="text-center">
+        <span>Already have an account?</span>
+        <a href="{% url 'sales:login' %}">Login</a>
+    </div>
+</div>
+
+{% endblock %}
