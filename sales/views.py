@@ -316,7 +316,7 @@ def product_view(request):
         product_list = p.page(1)
 
     context = {
-        'product_list': product_list,
+        'product_list': product_list.order_by('-id'),
         'product_filter': product_filter
     }
     return render(request, 'sales/product.html', context)
@@ -377,8 +377,7 @@ def order_create(request, pk):
     customer = Customer.objects.get(pk=pk)
 
     if request.user.profile.id == customer.user_profile.id:
-        OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'quantity', 'status'),
-                                             max_num=3, can_delete=False)
+        OrderFormSet = inlineformset_factory(Customer, Order, fields=('product', 'quantity', 'status'), max_num=3, can_delete=False)
         formset = OrderFormSet(queryset=Order.objects.none(), instance=customer)
 
         if request.method == 'POST':
@@ -394,7 +393,6 @@ def order_create(request, pk):
                     if product is not None:
                         product.inventory -= ordered_quantity
                         product.save()
-
                 messages.success(request, 'Successfully created order.')
                 return HttpResponseRedirect(reverse('sales:detail', kwargs={'pk': customer.id}))
 

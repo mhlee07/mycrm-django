@@ -94,11 +94,11 @@
                     {% for order in order_list %}
                     <tr>
                         <td>
-                            <a href="{% url 'sales:order-update' order.id %}" class="btn btn-outline-primary">
+                            <a href="{% url 'sales:order-update' customer.id order.id %}" class="btn btn-outline-primary">
                                 <span class="fas fa-edit"></span>&nbsp;
                                 Edit
                             </a>
-                            <a href="{% url 'sales:order-delete' order.id %}" class="btn btn-outline-danger">
+                            <a href="{% url 'sales:order-delete' customer.id order.id %}" class="btn btn-outline-danger">
                                 <span class="fas fa-trash"></span>&nbsp;
                                 Delete
                             </a>
